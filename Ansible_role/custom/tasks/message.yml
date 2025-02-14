@@ -1,0 +1,5 @@
+---
+- name: Set message file
+  debug:
+    var: message
+    
