@@ -1,0 +1,22 @@
+- name: Install required packages on GroupB
+  apt:
+    name: "{{ packages }}"
+    state: present
+  with_items: "{{ packages }}"
+  register: install_output
+  tags:
+    - install_groupB
+
+- name: Debug installation output
+  debug:
+    msg: "{{ install_output }}"
+  when: install_output.changed
+  tags:
+    - debug
+
+- name: Notify handler to restart HTTP service
+  service:
+    name: apache2
+    state: restarted
+  when: "'apache2' in packages"
+  notify: restart_httpd

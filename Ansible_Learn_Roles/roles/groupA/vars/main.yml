@@ -1,0 +1,4 @@
+packages:
+  - maven
+  - git
+  - python3

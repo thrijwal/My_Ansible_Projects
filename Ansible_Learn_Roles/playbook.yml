@@ -1,0 +1,9 @@
+- name: Install software on GroupA
+  hosts: GroupA
+  roles:
+    - groupA
+
+- name: Install software on GroupB
+  hosts: GroupB
+  roles:
+    - groupB
