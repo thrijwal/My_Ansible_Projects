@@ -1,22 +1,15 @@
-- name: Install required packages on GroupB
+- name: Update apt cache before installing packages
+  apt:
+    update_cache: yes
+  become: yes  # Ensures command runs with sudo privileges
+
+- name: Install required packages on GroupA
   apt:
     name: "{{ packages }}"
     state: present
   with_items: "{{ packages }}"
-  register: install_output
-  tags:
-    - install_groupB
+  become: yes  # Ensures package installation runs as sudo
 
 - name: Debug installation output
   debug:
-    msg: "{{ install_output }}"
-  when: install_output.changed
-  tags:
-    - debug
-
-- name: Notify handler to restart HTTP service
-  service:
-    name: apache2
-    state: restarted
-  when: "'apache2' in packages"
-  notify: restart_httpd
+    var: install_output
