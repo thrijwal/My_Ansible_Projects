@@ -1,0 +1,37 @@
+---
+- name: Install dependencies for Maven
+  apt:
+    name:
+      - openjdk-11-jdk
+      - wget
+      - curl
+      - unzip
+    state: present
+
+- name: Download Apache Maven
+  get_url:
+    url: "https://dlcdn.apache.org/maven/maven-3/3.9.6/binaries/apache-maven-3.9.6-bin.tar.gz"
+    dest: "/tmp/apache-maven-3.9.6-bin.tar.gz"
+
+- name: Extract Maven
+  unarchive:
+    src: "/tmp/apache-maven-3.9.6-bin.tar.gz"
+    dest: "/opt"
+    remote_src: yes
+
+- name: Create symlink for Maven
+  file:
+    src: "/opt/apache-maven-3.9.6"
+    dest: "/opt/maven"
+    state: link
+
+- name: Set Maven Environment Variables
+  template:
+    src: maven.sh.j2
+    dest: /etc/profile.d/maven.sh
+    mode: '0644'
+
+- name: Apply environment variables
+  shell: source /etc/profile.d/maven.sh
+  args:
+    executable: /bin/bash

@@ -1,0 +1,7 @@
+---
+- name: Configure Jenkins Nodes
+  hosts: jenkins_nodes
+  become: yes
+  roles:
+    - git
+    - maven
