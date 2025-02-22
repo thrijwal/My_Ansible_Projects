@@ -9,7 +9,17 @@
     state: present
   with_items: "{{ packages }}"
   become: yes  # Ensures package installation runs as sudo
+  tags:
+    - Install_A
+  register: install_output
 
-- name: Debug installation output
-  debug:
-    var: install_output
+- name: Print success message
+  when: install_output.changed  # Condition applied at the task level
+  block:
+    - name: Debug installation output
+      debug:
+        var: install_output
+
+    - name: Print success message
+      debug:
+        msg: "Installation on A completed"
