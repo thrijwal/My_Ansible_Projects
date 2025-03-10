@@ -1,0 +1,30 @@
+pipeline {
+    agent { label 'ansible' }
+
+    triggers {
+        githubPush()
+    }
+
+    stages {
+        stage('Setup Ansible Playbook') {
+            steps {
+                echo "Checking out Ansible repository..."
+                checkout([$class: 'GitSCM', 
+                    branches: [[name: 'main']], 
+                    userRemoteConfigs: [[url: 'https://github.com/thrijwal/My_Ansible_Projects.git']]
+                ])
+                echo "Running Ansible playbook to set up Maven environment on Jnode1 and Jnode2..."
+                sh "cd Ansible_Jenkins && ansible-playbook -i inventory maven_playbook.yml"
+            }
+        }
+    }
+    
+    post {
+        success {
+            echo "Ansible setup completed successfully!"
+        }
+        failure {
+            echo "Ansible setup failed!"
+        }
+    }
+}
